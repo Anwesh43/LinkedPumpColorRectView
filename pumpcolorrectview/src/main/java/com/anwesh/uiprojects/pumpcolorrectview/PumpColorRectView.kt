@@ -204,4 +204,13 @@ class PumpColorRectView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity: Activity) : PumpColorRectView {
+            val view : PumpColorRectView = PumpColorRectView(activity)
+            activity.setContentView(view)
+            return view 
+        }
+    }
 }
