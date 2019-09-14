@@ -158,4 +158,28 @@ class PumpColorRectView(ctx : Context) : View(ctx) {
             return this
         }
     }
+
+    data class PumpColorRect(var i : Int) {
+
+        private val root : PCRNode = PCRNode(0)
+        private var curr : PCRNode = root
+        private var dir : Int = 1
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            root.draw(canvas, paint)
+        }
+
+        fun update(cb : (Float) -> Unit) {
+            curr.update {
+                curr = curr.getNext(dir) {
+                    dir *= -1
+                }
+                cb(it)
+            }
+        }
+
+        fun starUpdating(cb : () -> Unit) {
+            curr.startUpdating(cb)
+        }
+    }
 }
