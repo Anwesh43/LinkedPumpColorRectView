@@ -178,8 +178,30 @@ class PumpColorRectView(ctx : Context) : View(ctx) {
             }
         }
 
-        fun starUpdating(cb : () -> Unit) {
+        fun startUpdating(cb : () -> Unit) {
             curr.startUpdating(cb)
+        }
+    }
+
+    data class Renderer(var view : PumpColorRectView) {
+
+        private val pcr : PumpColorRect = PumpColorRect(0)
+        private val animator : Animator = Animator(view)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            pcr.draw(canvas, paint)
+            animator.animate {
+                pcr.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            pcr.startUpdating {
+                animator.start()
+            }
         }
     }
 }
