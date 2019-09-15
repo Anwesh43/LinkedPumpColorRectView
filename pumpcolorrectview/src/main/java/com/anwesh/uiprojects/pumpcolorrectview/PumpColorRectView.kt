@@ -16,12 +16,12 @@ import android.content.Context
 val nodes : Int = 5
 val scGap : Float = 0.01f
 val strokeFactor : Int = 90
-val sizeFactor : Float = 2.3f
+val sizeFactor : Float = 1.6f
 val lWFactor : Float = 3f
 val lHFactor : Float = 6.9f
 val foreColor : Int = Color.parseColor("#f44336")
 val backColor : Int = Color.parseColor("#BDBDBD")
-val delay : Long = 25
+val delay : Long = 5
 
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
@@ -36,7 +36,10 @@ fun Canvas.drawPumpRect(sc1 : Float, sc2 : Float, size : Float, paint : Paint) {
     drawRect(RectF(-lw, -lh, lw, 0f), paint)
     drawLine(0f, 0f, 0f, -ly, paint)
     restore()
-    drawRect(RectF(-size, 0f, size, size * sc2), paint)
+    paint.style = Paint.Style.STROKE
+    drawRect(RectF(-size / 2, 0f, size / 2, size), paint)
+    paint.style = Paint.Style.FILL
+    drawRect(RectF(-size / 2, 0f, size / 2, size * (sc2) + size * (1 - sc1)), paint)
 }
 
 fun Canvas.drawPCRNode(i : Int, scale : Float, paint : Paint) {
@@ -98,6 +101,7 @@ class PumpColorRectView(ctx : Context) : View(ctx) {
                 cb()
                 try {
                     Thread.sleep(delay)
+                    view.invalidate()
                 } catch(ex : Exception) {
 
                 }
@@ -150,7 +154,7 @@ class PumpColorRectView(ctx : Context) : View(ctx) {
         fun getNext(dir : Int, cb : () -> Unit) : PCRNode {
             var curr : PCRNode? = prev
             if (dir == 1) {
-                curr = prev
+                curr = next
             }
             if (curr != null) {
                 return curr
